@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasti - e-Verify - Submit FP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-red': '#e74c3c',
+                        'nav-bg': '#000080',
+                        'nav-active-bg': '#0000AA',
+                        'pasti-dark-blue': '#293547',
+                        'pasti-blue': '#3498db',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f0f0f0; margin: 0; font-family: 'Inter', sans-serif; }
+        .app-container { display: flex; height: 100vh; }
+        .sidebar { width: 250px; background-color: #2c3e50; color: white; padding-top: 20px; flex-shrink: 0; overflow-y: auto; }
+        .logo-section { padding: 10px 20px; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        .menu-item { display: block; padding: 10px 20px; cursor: pointer; border-left: 3px solid transparent; font-size: 14px; transition: background-color 0.15s; }
+        .menu-item:hover, .menu-item.active { background-color: #0000AA; border-left: 3px solid #3498db; }
+        .submenu-item { padding-left: 30px; font-size: 13px; background-color: #3b5066; }
+        .pdf-container { border: 2px solid #e1e5e9; border-radius: 8px; background-color: white; padding: 20px; margin-bottom: 20px; }
+        .pdf-placeholder { height: 500px; background-color: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6c757d; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-section">Pasti</div>
+        <hr style="border-color: #0000AA;">
+        <div class="menu-item">IT Service Management</div>
+        <div class="menu-item">Finance & Accounting</div>
+        <div class="menu-item">E-Filing</div>
+        <div class="menu-group">
+            <div class="menu-item flex justify-between items-center bg-[#0000AA] border-l-3 border-[#3498db]">
+                <span>e-Verify</span>
+                <svg class="w-4 h-4 transform rotate-180" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </div>
+            <div>
+                <div class="menu-item submenu-item">Registry Dropbox</div>
+                <div class="menu-item submenu-item">Dropbox Upload</div>
+                <div class="menu-item submenu-item">Upload Document</div>
+                <div class="menu-item submenu-item active">Submit FP</div>
+                <div class="menu-item submenu-item">Print Dropbox</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 flex flex-col bg-white overflow-hidden">
+        <!-- Top Nav -->
+        <div class="flex justify-between items-center bg-primary-red text-white p-2 text-sm shadow-md">
+            <div class="flex">
+                <div class="px-3 cursor-pointer hover:bg-white hover:text-gray-800 rounded-t-lg">🏠 Home</div>
+                <div class="px-3 bg-white text-gray-800 font-semibold rounded-t-lg">Submit FP</div>
+            </div>
+            <div id="currentDateTime"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 p-8 overflow-y-auto bg-gray-50">
+            <h1 class="text-2xl font-bold mb-6 text-pasti-dark-blue border-b pb-2">Submit FP</h1>
+
+            <!-- Message Area (Success/Error) -->
+            <div id="statusMessage" class="max-w-6xl mx-auto mb-6 hidden">
+                <div id="messageBox" class="p-4 rounded-lg flex items-start space-x-3">
+                    <div id="messageIcon" class="mt-0.5"></div>
+                    <div>
+                        <p id="messageText" class="font-medium"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDF Viewer Section -->
+            <div class="max-w-6xl mx-auto pdf-container">
+                <div id="pdfViewer" class="pdf-placeholder">
+                    <div class="text-center" id="pdfDefaultView">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <p class="text-lg">PDF file will be displayed here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Box -->
+            <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-6">
+                <div class="flex flex-col items-center">
+                    <input type="file" id="fileInput" accept=".pdf" class="hidden">
+                    <button id="chooseFileBtn" class="bg-pasti-blue hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg shadow-md transition text-lg flex items-center mb-2">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        Choose File
+                    </button>
+                    <p id="fileNameDisplay" class="text-gray-500 italic text-sm">No file chosen</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="max-w-6xl mx-auto flex justify-center space-x-6">
+                <button id="submitBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-12 rounded-lg shadow-md text-lg">
+                    Submit
+                </button>
+                <button id="backBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-12 rounded-lg shadow-md text-lg">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const fileInput = document.getElementById('fileInput');
+        const chooseFileBtn = document.getElementById('chooseFileBtn');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const submitBtn = document.getElementById('submitBtn');
+        const backBtn = document.getElementById('backBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const messageBox = document.getElementById('messageBox');
+        const messageText = document.getElementById('messageText');
+        const messageIcon = document.getElementById('messageIcon');
+        const pdfViewer = document.getElementById('pdfViewer');
+        const pdfDefaultContent = pdfViewer.innerHTML;
+        let submittedSuccessfully = false;
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+            const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            document.getElementById('currentDateTime').textContent = `${dateStr} ${timeStr}`;
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        chooseFileBtn.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                fileNameDisplay.textContent = file.name;
+                statusMessage.classList.add('hidden');
+                
+                pdfViewer.innerHTML = `
+                    <div class="w-full h-full flex flex-col items-center justify-center bg-gray-100 rounded">
+                        <svg class="w-20 h-20 text-red-500 mb-2" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z"></path><path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"></path></svg>
+                        <span class="font-bold text-gray-700">${file.name}</span>
+                        <span class="text-xs text-gray-400 mt-1">Ready for verification</span>
+                    </div>
+                `;
+            }
+        };
+
+        submitBtn.onclick = () => {
+            if (submittedSuccessfully) {
+                // If already submitted successfully, navigate to dropbox_upload.html
+                window.location.href = 'dropbox_upload.html';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            if (!file) {
+                showMessage("Please select a file first.", "error");
+                return;
+            }
+
+            if (file.name === 'INV234567890.pdf') {
+                showMessage(`File "${file.name}" verification successful. Data has been submitted to FP.`, "success");
+                submittedSuccessfully = true;
+                // Navigate to dropbox_upload.html with uploaded parameter
+                setTimeout(() => {
+                    window.location.href = 'dropbox_upload.html?uploaded=true';
+                }, 2000);
+            } else {
+                showMessage(`ERROR: File name "${file.name}" is not match with Tax Invoice No. Please check your document.`, "error");
+                submittedSuccessfully = false;
+                // Navigate to dropbox_upload.html after showing error for 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'dropbox_upload.html';
+                }, 2000);
+            }
+        };
+
+        backBtn.onclick = () => {
+            fileInput.value = '';
+            fileNameDisplay.textContent = 'No file chosen';
+            statusMessage.classList.add('hidden');
+            pdfViewer.innerHTML = pdfDefaultContent;
+        };
+
+        function showMessage(text, type) {
+            statusMessage.classList.remove('hidden');
+            if (type === 'success') {
+                messageBox.className = "p-4 rounded-lg flex items-start space-x-3 bg-green-100 border border-green-400 text-green-800";
+                messageIcon.innerHTML = `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>`;
+            } else {
+                messageBox.className = "p-4 rounded-lg flex items-start space-x-3 bg-red-100 border border-red-400 text-red-800";
+                messageIcon.innerHTML = `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>`;
+            }
+            messageText.textContent = text;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasti - Verification Transaction (GR/SR)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-red': '#e74c3c',
+                        'table-header-bg-main': '#bdc3c7',
+                        'search-button-blue': '#3498db',
+                        'back-button-red': '#e74c3c',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f0f0f0; 
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .logo-section {
+            padding: 10px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #0000AA;
+            border-left: 3px solid #3498db;
+        }
+
+        .menu-item-group {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 10px 20px 5px;
+            color: #bdc3c7;
+        }
+        
+        .search-input {
+            border: 1px solid #ccc;
+            padding: 4px 8px;
+            border-radius: 3px;
+            width: 120px; 
+            font-size: 13px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px; 
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .data-table th:nth-child(3), .data-table td:nth-child(3) { text-align: left; }
+        .data-table td:nth-last-child(-n+4) { text-align: right; font-family: monospace; }
+        
+        .data-table thead tr th {
+            background-color: #bdc3c7; 
+            font-weight: bold;
+            color: #333;
+            padding: 6px 4px;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .right-panel {
+            min-width: 260px;
+            padding: 20px 15px;
+            background-color: white; 
+            border-left: 1px solid #ddd;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            padding-top: 50px;
+        }
+        
+        .entry-tax-btn {
+            background-color: #390ced;
+            color: white;
+            padding: 8px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .summary-label {
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-family: monospace;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .summary-value.large {
+            font-size: 16px;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body class="bg-[#f0f0f0]">
+
+<div class="app-container">
+    <div class="sidebar">
+        <div class="logo-section">Pasti</div>
+        <hr style="border-color: #0000AA;">
+        <div class="menu-item-group">MENU</div>
+        <div class="menu-item">IT Service Management</div>
+        <div class="menu-item">Finance & Accounting</div>
+        <div class="menu-item">E-Filing</div>
+        <div class="menu-item">E-Verify</div>
+        <div class="menu-item">Maintain Master Method</div>
+        <div class="menu-item active">Verification Transaction</div>
+        <div class="menu-item">Re-Print Verification</div>
+        <div class="menu-item">Tax Invoice Process</div>
+        <div class="menu-item">e-Verify</div>
+        <div class="menu-item">Monitoring Transaction</div>
+        <div class="menu-item">Upload Data Payment Invoice</div>
+        <div class="menu-item-group" style="margin-top: 20px;">AHM-PASTI</div>
+    </div>
+
+    <div class="flex-1 flex flex-col bg-white overflow-hidden">
+        <div class="flex justify-between items-center bg-primary-red text-white p-2 text-sm shadow-md flex-shrink-0">
+            <div class="flex">
+                <div class="px-3 cursor-pointer hover:bg-white hover:text-gray-800 rounded-t-lg">🏠 Home</div>
+                <div class="px-3 bg-white text-gray-800 rounded-t-lg font-semibold">Verification Transaction (GR/SR) <span class="ml-2 cursor-pointer">x</span></div>
+            </div>
+            <div>6 Nov 2025 14:20:47</div> 
+        </div>
+
+        <div class="p-4 bg-white flex-shrink-0 border-b border-gray-200">
+            <div class="flex flex-col space-y-4 bg-gray-50 p-3 rounded-md border border-gray-100">
+                <div class="flex flex-col text-xs font-semibold text-gray-700">
+                    <div>Currency</div>
+                    <select class="search-input w-[80px] text-gray-800">
+                        <option>IDR</option>
+                        <option>USD</option>
+                    </select>
+                </div>
+                <div class="flex flex-col text-xs font-semibold text-gray-700">
+                    <div>(Begin) Ref Doc Date</div>
+                    <input type="date" value="2025-11-22" class="search-input text-gray-800">
+                </div>
+                <div class="flex flex-col text-xs font-semibold text-gray-700">
+                    <div>(End) Ref Doc Date</div>
+                    <input type="date" value="2025-11-22" class="search-input text-gray-800">
+                </div>
+                <div class="flex space-x-4">
+                    <button class="action-button bg-search-button-blue text-white shadow-md hover:bg-blue-600 px-6 py-2 text-sm">Search</button>
+                    <button class="action-button bg-back-button-red text-white shadow-md hover:bg-red-700 px-6 py-2 text-sm">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-1 overflow-hidden">
+            <div class="flex-1 overflow-x-auto overflow-y-auto">
+                <div class="border border-gray-200 shadow-sm">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllCheckbox" class="w-3 h-3"></th> 
+                                <th>No.</th>
+                                <th>Detail</th>
+                                <th>Ref Document No.</th>
+                                <th>Ref Document Date</th>
+                                <th>Transaction No.</th>
+                                <th>Transaction Date</th>
+                                <th>Superior Doc. No.</th>
+                                <th style="min-width: 80px;">PPN</th>
+                                <th style="min-width: 80px;">PPh</th>
+                                <th style="min-width: 100px;">Total Amount</th>
+                                <th style="min-width: 100px;">Total Transaction</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-rows"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <h3 class="font-bold text-gray-800 border-b pb-2 mb-2">Summary Details</h3>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Amount</span>
+                    <span class="summary-value large">15.545.000</span>
+                </div>
+
+                <div class="summary-row">
+                    <span class="summary-label">PPN (11%)</span>
+                    <span class="summary-value">1.710.000</span>
+                </div>
+
+                <div class="summary-row">
+                    <span class="summary-label">PPh</span>
+                    <span class="summary-value">0</span>
+                </div>
+
+                <div class="summary-row mt-4 border-t-2 border-gray-200 pt-2">
+                    <span class="summary-label font-bold text-gray-900">Total Amount</span>
+                    <span class="summary-value large text-red-600">17.255.000</span>
+                </div>
+
+                <div class="summary-row">
+                    <span class="summary-label font-bold text-gray-900">Total Trans.</span>
+                    <span class="summary-value">11</span>
+                </div>
+
+                <button id="entryTaxInvoiceBtn" class="entry-tax-btn">
+                    Entry Tax Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tableBody = document.getElementById('transaction-rows');
+        const selectAll = document.getElementById('selectAllCheckbox');
+        const formatCurrency = (num) => new Intl.NumberFormat('id-ID').format(num);
+
+        const dummyData = [
+            { ref: 'REF-001', trans: 'TRX-551', sup: 'SUP-90', ppn: 110000, pph: 0, total: 1110000 },
+            { ref: 'REF-002', trans: 'TRX-552', sup: 'SUP-91', ppn: 220000, pph: 0, total: 2220000 },
+            { ref: 'REF-003', trans: 'TRX-553', sup: 'SUP-92', ppn: 150000, pph: 0, total: 1515000 },
+            { ref: 'REF-004', trans: 'TRX-554', sup: 'SUP-93', ppn: 80000, pph: 0, total: 808000 },
+            { ref: 'REF-005', trans: 'TRX-555', sup: 'SUP-94', ppn: 195000, pph: 0, total: 1969500 },
+            { ref: 'REF-006', trans: 'TRX-556', sup: 'SUP-95', ppn: 310000, pph: 0, total: 3131000 },
+            { ref: 'REF-007', trans: 'TRX-557', sup: 'SUP-96', ppn: 45000, pph: 0, total: 454500 },
+            { ref: 'REF-008', trans: 'TRX-558', sup: 'SUP-97', ppn: 120000, pph: 0, total: 1212000 },
+            { ref: 'REF-009', trans: 'TRX-559', sup: 'SUP-98', ppn: 245000, pph: 0, total: 2474500 },
+            { ref: 'REF-010', trans: 'TRX-560', sup: 'SUP-99', ppn: 115000, pph: 0, total: 1161500 },
+            { ref: 'REF-011', trans: 'TRX-561', sup: 'SUP-100', ppn: 120000, pph: 0, total: 1212000 }
+        ];
+
+        dummyData.forEach((item, i) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="checkbox" class="transaction-checkbox" checked></td>
+                <td>${i + 1}</td>
+                <td>A</td>
+                <td>${item.ref}</td>
+                <td>22-Nov-2025</td>
+                <td>${item.trans}</td>
+                <td>22-Nov-2025</td>
+                <td>${item.sup}</td>
+                <td>${formatCurrency(item.ppn)}</td>
+                <td>${formatCurrency(item.pph)}</td>
+                <td>${formatCurrency(item.total)}</td>
+                <td>${formatCurrency(item.total)}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        const detailCheckboxes = document.querySelectorAll('.transaction-checkbox'); 
+        selectAll.addEventListener('change', (e) => {
+            detailCheckboxes.forEach(checkbox => checkbox.checked = e.target.checked);
+        });
+
+        document.getElementById('entryTaxInvoiceBtn').addEventListener('click', () => {
+            window.location.href = 'entry_tax_invoice.html';
+        });
+    });
+</script>
+</body>
+</html>
