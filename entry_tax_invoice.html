@@ -253,25 +253,9 @@
 
         const submitBtn = document.getElementById('submitTaxInvoiceBtn');
         submitBtn.addEventListener('click', () => {
-            // Show generating report overlay
-            showGeneratingReport();
-            // Navigate to the next page after 2 seconds
-            setTimeout(() => {
-                window.location.href = 'entry_document_date.html';
-            }, 2000);
+            // Navigate to the next page as requested
+            window.location.href = 'entry_document_date.html';
         });
-
-        function showGeneratingReport() {
-            const overlay = document.createElement('div');
-            overlay.id = 'generatingOverlay';
-            overlay.className = 'fixed inset-0 bg-blue-600 bg-opacity-90 flex items-center justify-center z-50';
-            overlay.innerHTML = `
-                <div class="text-white text-2xl font-bold">
-                    Generating Report
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
     });
 </script>
 </body>
