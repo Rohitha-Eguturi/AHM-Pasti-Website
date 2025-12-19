@@ -214,6 +214,64 @@
             padding-left: 5px;
             font-size: 11px;
         }
+
+        /* Dialog Styles */
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .dialog-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .dialog-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #e74c3c;
+        }
+
+        .dialog-message {
+            margin-bottom: 20px;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-back {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-continue {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -283,17 +341,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="highlighted-row"> 
+                    <tr class="highlighted-row">
                         <td>1</td>
-                        <td><a href="verification_detail.html" class="period-link">NOV 2025</a></td>
+                        <td><a href="#" class="period-link" id="nov-link">NOV 2025</a></td>
                         <td>IDR</td>
                         <td>3.452</td>
                         <td>3.452</td>
                         <td>1.427</td>
                         <td class="unverified-cell">2.025</td>
-                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
-                        <td>Open</td> 
-                        <td style="text-align: center;"><span class="clickable-icon">...</span></td> 
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td>
+                        <td>Open</td>
+                        <td style="text-align: center;"><span class="clickable-icon">...</span></td>
                     </tr>
                     <tr> 
                         <td>2</td>
@@ -349,5 +407,44 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const novLink = document.getElementById('nov-link');
+
+        novLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            showWarningDialog();
+        });
+
+        function showWarningDialog() {
+            const overlay = document.createElement('div');
+            overlay.className = 'dialog-overlay';
+            overlay.innerHTML = `
+                <div class="dialog-box">
+                    <div class="dialog-title">WARNING</div>
+                    <div class="dialog-message">
+                        Previous months invoice are unverified yet, Are you sure you want to continue?
+                    </div>
+                    <div class="dialog-buttons">
+                        <button class="btn-back" onclick="closeDialog()">Back</button>
+                        <button class="btn-continue" onclick="continueToDetail()">Continue</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        window.closeDialog = function() {
+            const overlay = document.querySelector('.dialog-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        };
+
+        window.continueToDetail = function() {
+            window.location.href = 'verification_detail.html';
+        };
+    });
+</script>
 </body>
 </html>
